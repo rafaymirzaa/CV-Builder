@@ -1,34 +1,90 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import PersonalInfo from './modules/Personal'
+import { Education } from './modules/Education'
+import { Experience } from './modules/Experience'
+import CVDisplay from './modules/CVDisplay'
 
 function App() {
-  const [count, setCount] = useState(0)
+  // Personal Info State
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [phoneNum, setPhoneNum] = useState("")
+
+  // Education State
+  const [school, setSchool] = useState("")
+  const [degree, setDegree] = useState("")
+  const [eduStartDate, setEduStartDate] = useState("")
+  const [eduEndDate, setEduEndDate] = useState("")
+
+  // Experience State
+  const [company, setCompany] = useState("")
+  const [position, setPosition] = useState("")
+  const [responsibilities, setResponsibilities] = useState("")
+  const [expStartDate, setExpStartDate] = useState("")
+  const [expEndDate, setExpEndDate] = useState("")
+
+  // One editing state for everything
+  const [isEditing, setIsEditing] = useState(true)
+
+  const handleGenerateCV = (e) => {
+    e.preventDefault()
+    setIsEditing(false)  
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="cv-builder">
+      <h1>CV Builder</h1>
+      
+      {isEditing ? (
+        // EDIT MODE - Show all forms
+        <form onSubmit={handleGenerateCV} className="cv-forms">
+          <PersonalInfo
+            name={name}
+            email={email}
+            phoneNum={phoneNum}
+            setName={setName}
+            setEmail={setEmail}
+            setPhoneNum={setPhoneNum}
+          />
+
+          <Education
+            school={school}
+            degree={degree}
+            startDate={eduStartDate}
+            endDate={eduEndDate}
+            setSchool={setSchool}
+            setDegree={setDegree}
+            setStartDate={setEduStartDate}
+            setEndDate={setEduEndDate}
+          />
+
+          <Experience
+            company={company}
+            position={position}
+            responsibilities={responsibilities}
+            startDate={expStartDate}
+            endDate={expEndDate}
+            setCompany={setCompany}
+            setPosition={setPosition}
+            setResponsibilities={setResponsibilities}
+            setStartDate={setExpStartDate}
+            setEndDate={setExpEndDate}
+          />
+
+          <button type="submit" className="generate-btn">
+            Generate CV Preview
+          </button>
+        </form>
+      ) : (
+        // Dispaly
+        <CVDisplay
+          personalInfo={{ name, email, phoneNum }}
+          education={{ school, degree, startDate: eduStartDate, endDate: eduEndDate }}
+          experience={{ company, position, responsibilities, startDate: expStartDate, endDate: expEndDate }}
+          onEdit={() => setIsEditing(true)}
+        />
+      )}
+    </div>
   )
 }
 
